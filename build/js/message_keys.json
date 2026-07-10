@@ -1,3 +1,4 @@
 {
-    "dummy": 10000
+    "AIRCRAFT": 10001,
+    "STATUS": 10000
 }

@@ -1,0 +1,16 @@
+# Pebble build output
+build/
+
+# Node dependencies
+node_modules/
+
+# macOS
+.DS_Store
+
+# Pebble local build files
+.lock-waf_*
+*.pyc
+__pycache__/
+
+# Editor files
+.vscode/

@@ -6,4 +6,5 @@
 // DO NOT MODIFY - CHANGES WILL BE OVERWRITTEN
 //
 
-extern uint32_t MESSAGE_KEY_dummy;
+extern uint32_t MESSAGE_KEY_AIRCRAFT;
+extern uint32_t MESSAGE_KEY_STATUS;

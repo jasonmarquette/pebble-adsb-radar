@@ -85,7 +85,9 @@ Discarded input sections
                 0x00000000        0x4 emery/src/resource_ids.auto.c.17.o
  .text          0x00000000        0x0 src/message_keys.auto.c.17.o
  .bss           0x00000000        0x0 src/message_keys.auto.c.17.o
- .data.MESSAGE_KEY_dummy
+ .data.MESSAGE_KEY_STATUS
+                0x00000000        0x4 src/message_keys.auto.c.17.o
+ .data.MESSAGE_KEY_AIRCRAFT
                 0x00000000        0x4 src/message_keys.auto.c.17.o
  .bss           0x00000000        0x0 /Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/current/sdk-core/pebble/emery/lib/libpebble.a(tmp6fj2jormpebble.o)
  .text.accel_data_service_subscribe__deprecated
@@ -1782,17 +1784,17 @@ LOAD /Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/tool
  .comment       0x00000038       0x39 /Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(libc_a-errno.o)
  .comment       0x00000038       0x39 /Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v7-m/nofp/crtend.o
 
-.debug_info     0x00000000      0x62b
+.debug_info     0x00000000      0x639
  .debug_info    0x00000000      0x1cf src/c/mdbl.c.17.o
  .debug_info    0x000001cf      0x33e emery/appinfo.auto.c.17.o
  .debug_info    0x0000050d       0x8f emery/src/resource_ids.auto.c.17.o
- .debug_info    0x0000059c       0x8f src/message_keys.auto.c.17.o
+ .debug_info    0x0000059c       0x9d src/message_keys.auto.c.17.o
 
-.debug_abbrev   0x00000000      0x255
+.debug_abbrev   0x00000000      0x257
  .debug_abbrev  0x00000000      0x10c src/c/mdbl.c.17.o
  .debug_abbrev  0x0000010c       0xb9 emery/appinfo.auto.c.17.o
  .debug_abbrev  0x000001c5       0x48 emery/src/resource_ids.auto.c.17.o
- .debug_abbrev  0x0000020d       0x48 src/message_keys.auto.c.17.o
+ .debug_abbrev  0x0000020d       0x4a src/message_keys.auto.c.17.o
 
 .debug_loclists
                 0x00000000       0x20
@@ -1820,12 +1822,12 @@ LOAD /Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/tool
  .debug_line    0x00000398      0x155 emery/src/resource_ids.auto.c.17.o
  .debug_line    0x000004ed      0x14f src/message_keys.auto.c.17.o
 
-.debug_str      0x00000000      0x591
- .debug_str     0x00000000      0x591 src/c/mdbl.c.17.o
+.debug_str      0x00000000      0x5a7
+ .debug_str     0x00000000      0x5a7 src/c/mdbl.c.17.o
                                 0x221 (size before relaxing)
- .debug_str     0x00000591      0x4df emery/appinfo.auto.c.17.o
- .debug_str     0x00000591      0x197 emery/src/resource_ids.auto.c.17.o
- .debug_str     0x00000591      0x193 src/message_keys.auto.c.17.o
+ .debug_str     0x000005a7      0x4df emery/appinfo.auto.c.17.o
+ .debug_str     0x000005a7      0x197 emery/src/resource_ids.auto.c.17.o
+ .debug_str     0x000005a7      0x1a9 src/message_keys.auto.c.17.o
 
 .debug_frame    0x00000000       0x28
  .debug_frame   0x00000000       0x28 src/c/mdbl.c.17.o

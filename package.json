@@ -26,7 +26,8 @@
       "watchface": false
     },
     "messageKeys": [
-      "dummy"
+      "STATUS",
+      "AIRCRAFT"
     ],
     "resources": {
       "media": []
