@@ -28,7 +28,8 @@ LD = 'arm-none-eabi-ld'
 LIBDIR = '/usr/local/lib'
 LIBPATH_ST = '-L%s'
 LIB_DIR = 'node_modules'
-LIB_JSON = []
+LIB_JSON = [{'name': '@moddable/pebbleproxy', 'version': '0.1.8', 'description': 'A PKJS-side HTTP and WebSocket proxy for Pebble OS apps using the Moddable SDK', 'homepage': 'https://github.com/Moddable-OpenSource/moddable', 'license': 'LGPL-3.0-or-later', 'main': 'proxy.js', 'exports': {'.': './proxy.js'}, 'publishConfig': {'access': 'public'}, 'repository': {'type': 'git', 'url': 'https://github.com/Moddable-OpenSource/moddable', 'directory': 'build/devices/pebble/npm/pebbleproxy'}, 'keywords': ['pebble', 'pebbleos', 'pkjs', 'moddable', 'websocket', 'http', 'proxy'], 'js_paths': ['node_modules/@moddable/pebbleproxy/package.json', 'node_modules/@moddable/pebbleproxy/proxy.js']}]
+LIB_RESOURCES_JSON = {'@moddable/pebbleproxy': {}}
 LIB_ST = '-l%s'
 LINKFLAGS = ['-mcpu=cortex-m3', '-mthumb', '-Wl,--gc-sections', '-Wl,--warn-common', '-fPIE', '-Os']
 LINKFLAGS_MACBUNDLE = ['-bundle', '-undefined', 'dynamic_lookup']
@@ -46,7 +47,7 @@ PEBBLE_SDK_ROOT = '/Users/jasonmarquette/Library/Application Support/Pebble SDK/
 PLATFORM = {'NAME': 'gabbro', 'MAX_APP_BINARY_SIZE': 131072, 'MAX_APP_MEMORY_SIZE': 131072, 'MAX_WORKER_MEMORY_SIZE': 10240, 'MAX_RESOURCES_SIZE_APPSTORE': 262144, 'MAX_RESOURCES_SIZE': 1048576, 'DEFINES': ['PBL_PLATFORM_GABBRO', 'PBL_COLOR', 'PBL_ROUND', 'PBL_MICROPHONE', 'PBL_HEALTH', 'PBL_COMPASS', 'PBL_TOUCH', 'PBL_DISPLAY_WIDTH=260', 'PBL_DISPLAY_HEIGHT=260'], 'BUILD_DIR': 'gabbro', 'BUNDLE_BIN_DIR': 'gabbro', 'ADDITIONAL_TEXT_LINES_FOR_PEBBLE_H': [], 'HAS_MODDABLE_XS': True, 'MAX_FONT_GLYPH_SIZE': 512, 'TAGS': ['gabbro', 'color', 'round', 'mic', 'health', 'compass', 'touch', '260w', '260h']}
 PLATFORM_NAME = 'gabbro'
 PREFIX = '/usr/local'
-PROJECT_INFO = {'displayName': 'pebble-adsb-radar', 'uuid': '6e2d0a71-1031-46c3-95b4-3aad4b7bc3af', 'projectType': 'moddable', 'sdkVersion': '3', 'enableMultiJS': True, 'targetPlatforms': ['emery', 'gabbro'], 'watchapp': {'watchface': True}, 'messageKeys': {'dummy': 10000}, 'resources': {'media': []}, 'name': 'pebble-adsb-radar', 'shortName': 'pebble-adsb-radar', 'longName': 'pebble-adsb-radar', 'versionLabel': '1.0.0', 'companyName': 'MakeAwesomeHappen', 'appKeys': {'dummy': 10000}}
+PROJECT_INFO = {'displayName': 'ADS-B Radar', 'uuid': '6e2d0a71-1031-46c3-95b4-3aad4b7bc3af', 'projectType': 'moddable', 'sdkVersion': '3', 'enableMultiJS': True, 'targetPlatforms': ['emery', 'gabbro'], 'capabilities': ['location'], 'watchapp': {'watchface': False}, 'messageKeys': {'dummy': 10000}, 'resources': {'media': []}, 'name': 'pebble-adsb-radar', 'shortName': 'ADS-B Radar', 'longName': 'ADS-B Radar', 'versionLabel': '1.0.0', 'companyName': 'Jason Marquette', 'appKeys': {'dummy': 10000}}
 REQUESTED_PLATFORMS = ['emery', 'gabbro']
 RESOURCES_JSON = []
 RPATH_ST = '-Wl,-rpath,%s'
@@ -61,7 +62,7 @@ STLIB_MARKER = None
 STLIB_ST = '-l%s'
 SUPPORTED_PLATFORMS = ['basalt', 'aplite', 'diorite', 'chalk', 'flint', 'emery', 'gabbro']
 TARGET_PLATFORMS = ['gabbro', 'emery']
-TIMESTAMP = 1783688539
+TIMESTAMP = 1783689196
 USE_GROUPS = True
 VERBOSE = 0
 WEBPACK = ['/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/current/node_modules/.bin/webpack']

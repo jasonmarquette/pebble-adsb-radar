@@ -1,4 +1,5 @@
 import Poco from "commodetto/Poco";
+import Location from "embedded:sensor/Location";
 
 const render = new Poco(screen);
 
@@ -9,13 +10,21 @@ const GREEN = render.makeColor(0, 255, 80);
 const DARK_GREEN = render.makeColor(0, 100, 40);
 const YELLOW = render.makeColor(255, 220, 0);
 const RED = render.makeColor(255, 50, 50);
+const GRAY = render.makeColor(160, 160, 160);
 
 // Fonts
 const SMALL_FONT = new render.Font("Gothic-Regular", 14);
 const LABEL_FONT = new render.Font("Gothic-Bold", 14);
 
+const RADAR_RANGE_MILES = 10;
+
+let locationStatus = "WAITING FOR PHONE";
+let currentLatitude = null;
+let currentLongitude = null;
+let locationRequest = null;
+
 // Temporary simulated aircraft.
-// Later these will come from the ADS-B API.
+// These will later be replaced with live ADS-B data.
 const aircraft = [
   {
     callsign: "UAL283",
@@ -43,20 +52,30 @@ const aircraft = [
   }
 ];
 
-const RADAR_RANGE_MILES = 10;
-
 function degreesToRadians(degrees) {
   return degrees * Math.PI / 180;
 }
 
-function polarToScreen(centerX, centerY, distance, bearing, radarRadius) {
+function polarToScreen(
+  centerX,
+  centerY,
+  distance,
+  bearing,
+  radarRadius
+) {
   const angle = degreesToRadians(bearing);
+
   const scaledDistance =
-    Math.min(distance / RADAR_RANGE_MILES, 1) * radarRadius;
+    Math.min(distance / RADAR_RANGE_MILES, 1) *
+    radarRadius;
 
   return {
-    x: Math.round(centerX + Math.sin(angle) * scaledDistance),
-    y: Math.round(centerY - Math.cos(angle) * scaledDistance)
+    x: Math.round(
+      centerX + Math.sin(angle) * scaledDistance
+    ),
+    y: Math.round(
+      centerY - Math.cos(angle) * scaledDistance
+    )
   };
 }
 
@@ -67,7 +86,53 @@ function drawCenteredText(text, font, color, y) {
   render.drawText(text, font, color, x, y);
 }
 
-function drawAircraftMarker(item, centerX, centerY, radarRadius) {
+function drawCircleOutline(
+  color,
+  centerX,
+  centerY,
+  radius,
+  thickness = 1
+) {
+  const steps = Math.max(36, radius * 4);
+
+  for (let layer = 0; layer < thickness; layer++) {
+    const currentRadius = radius - layer;
+
+    let previousX = centerX;
+    let previousY = centerY - currentRadius;
+
+    for (let i = 1; i <= steps; i++) {
+      const angle = (i / steps) * Math.PI * 2;
+
+      const x = Math.round(
+        centerX + Math.sin(angle) * currentRadius
+      );
+
+      const y = Math.round(
+        centerY - Math.cos(angle) * currentRadius
+      );
+
+      render.drawLine(
+        previousX,
+        previousY,
+        x,
+        y,
+        color,
+        1
+      );
+
+      previousX = x;
+      previousY = y;
+    }
+  }
+}
+
+function drawAircraftMarker(
+  item,
+  centerX,
+  centerY,
+  radarRadius
+) {
   const point = polarToScreen(
     centerX,
     centerY,
@@ -76,7 +141,6 @@ function drawAircraftMarker(item, centerX, centerY, radarRadius) {
     radarRadius
   );
 
-  // Aircraft marker
   render.fillRectangle(
     YELLOW,
     point.x - 3,
@@ -85,10 +149,16 @@ function drawAircraftMarker(item, centerX, centerY, radarRadius) {
     7
   );
 
-  // Small direction indicator
-  const headingAngle = degreesToRadians(item.bearing);
-  const noseX = Math.round(point.x + Math.sin(headingAngle) * 7);
-  const noseY = Math.round(point.y - Math.cos(headingAngle) * 7);
+  const headingAngle =
+    degreesToRadians(item.bearing);
+
+  const noseX = Math.round(
+    point.x + Math.sin(headingAngle) * 7
+  );
+
+  const noseY = Math.round(
+    point.y - Math.cos(headingAngle) * 7
+  );
 
   render.drawLine(
     point.x,
@@ -100,18 +170,25 @@ function drawAircraftMarker(item, centerX, centerY, radarRadius) {
   );
 }
 
+function formatCoordinate(value) {
+  if (value === null) {
+    return "--";
+  }
+
+  return value.toFixed(3);
+}
+
 function drawRadar() {
   const centerX = Math.round(render.width / 2);
-  const centerY = Math.round(render.height / 2);
+  const centerY = Math.round(render.height / 2) - 10;
 
-  // Leave room at the top and bottom for labels.
-  const radarRadius = Math.floor(
-    Math.min(render.width, render.height) / 2
-  ) - 24;
+  const radarRadius =
+    Math.floor(
+      Math.min(render.width, render.height) / 2
+    ) - 35;
 
   render.begin();
 
-  // Background
   render.fillRectangle(
     BLACK,
     0,
@@ -120,32 +197,27 @@ function drawRadar() {
     render.height
   );
 
-  // Radar range rings
-  render.drawCircle(
+  // Range rings
+  drawCircleOutline(
     DARK_GREEN,
     centerX,
     centerY,
-    Math.round(radarRadius * 0.33),
-    0,
-    360
+    Math.round(radarRadius * 0.33)
   );
 
-  render.drawCircle(
+  drawCircleOutline(
     DARK_GREEN,
     centerX,
     centerY,
-    Math.round(radarRadius * 0.66),
-    0,
-    360
+    Math.round(radarRadius * 0.66)
   );
 
-  render.drawCircle(
+  drawCircleOutline(
     GREEN,
     centerX,
     centerY,
     radarRadius,
-    0,
-    360
+    2
   );
 
   // Crosshairs
@@ -176,7 +248,7 @@ function drawRadar() {
     7
   );
 
-  // Aircraft
+  // Aircraft markers
   for (const item of aircraft) {
     drawAircraftMarker(
       item,
@@ -186,7 +258,7 @@ function drawRadar() {
     );
   }
 
-  // Cardinal direction
+  // North label
   drawCenteredText(
     "N",
     LABEL_FONT,
@@ -194,26 +266,126 @@ function drawRadar() {
     2
   );
 
-  // Status information
+  // Aircraft count and range
   drawCenteredText(
-    `${aircraft.length} AIRCRAFT`,
+    `${aircraft.length} AC | ${RADAR_RANGE_MILES} MI`,
     LABEL_FONT,
     WHITE,
-    render.height - 22
+    render.height - 47
   );
 
-  drawCenteredText(
-    `${RADAR_RANGE_MILES} MI`,
-    SMALL_FONT,
-    GREEN,
-    render.height - 38
-  );
+  // GPS status or coordinates
+  if (
+    currentLatitude !== null &&
+    currentLongitude !== null
+  ) {
+    drawCenteredText(
+      `${formatCoordinate(currentLatitude)}, ` +
+      `${formatCoordinate(currentLongitude)}`,
+      SMALL_FONT,
+      GREEN,
+      render.height - 31
+    );
+  } else {
+    drawCenteredText(
+      locationStatus,
+      SMALL_FONT,
+      GRAY,
+      render.height - 31
+    );
+  }
 
   render.end();
+}
+
+function closeLocationRequest() {
+  if (locationRequest) {
+    locationRequest.close();
+    locationRequest = null;
+  }
+}
+
+function requestLocation() {
+  closeLocationRequest();
+
+  locationStatus = "GETTING LOCATION";
+  drawRadar();
+
+  console.log("Requesting phone location");
+
+  try {
+    locationRequest = new Location({
+      onSample() {
+        const sample = this.sample();
+
+        if (
+          sample &&
+          typeof sample.latitude === "number" &&
+          typeof sample.longitude === "number"
+        ) {
+          currentLatitude = sample.latitude;
+          currentLongitude = sample.longitude;
+          locationStatus = "LOCATION READY";
+
+          console.log(
+            "Location: " +
+            currentLatitude +
+            ", " +
+            currentLongitude
+          );
+        } else {
+          locationStatus = "LOCATION FAILED";
+          console.log("Location sample was invalid");
+        }
+
+        closeLocationRequest();
+        drawRadar();
+      }
+    });
+
+    locationRequest.configure({
+      enableHighAccuracy: false,
+      timeout: 10000,
+      maximumAge: 300000
+    });
+  } catch (error) {
+    locationStatus = "LOCATION ERROR";
+
+    console.log(
+      "Location request failed: " +
+      error
+    );
+
+    closeLocationRequest();
+    drawRadar();
+  }
+}
+
+function handleConnection() {
+  const connected =
+    watch.connected &&
+    watch.connected.pebblekit;
 
   console.log(
-    `Radar drawn: ${render.width}x${render.height}`
+    "PebbleKit connected: " +
+    connected
   );
+
+  if (connected) {
+    requestLocation();
+  } else {
+    closeLocationRequest();
+
+    locationStatus = "PHONE NOT CONNECTED";
+    drawRadar();
+  }
 }
 
 drawRadar();
+
+watch.addEventListener(
+  "connected",
+  handleConnection
+);
+
+handleConnection();

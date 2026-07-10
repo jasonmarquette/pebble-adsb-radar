@@ -1,5 +1,5 @@
 {
-    "displayName": "pebble-adsb-radar",
+    "displayName": "ADS-B Radar",
     "uuid": "6e2d0a71-1031-46c3-95b4-3aad4b7bc3af",
     "projectType": "moddable",
     "sdkVersion": "3",
@@ -8,8 +8,11 @@
         "emery",
         "gabbro"
     ],
+    "capabilities": [
+        "location"
+    ],
     "watchapp": {
-        "watchface": true
+        "watchface": false
     },
     "messageKeys": {
         "dummy": 10000
@@ -18,12 +21,11 @@
         "media": []
     },
     "name": "pebble-adsb-radar",
-    "shortName": "pebble-adsb-radar",
-    "longName": "pebble-adsb-radar",
+    "shortName": "ADS-B Radar",
+    "longName": "ADS-B Radar",
     "versionLabel": "1.0.0",
-    "companyName": "MakeAwesomeHappen",
+    "companyName": "Jason Marquette",
     "appKeys": {
         "dummy": 10000
-    },
-    "capabilities": []
+    }
 }
