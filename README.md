@@ -472,9 +472,9 @@ git push
 
 ## License
 
-No open-source license has been selected yet.
+This project is licensed under the MIT License.
 
-Until a license is added, all rights are reserved by the project author.
+See the [LICENSE](LICENSE) file for details.
 
 ## Author
 
