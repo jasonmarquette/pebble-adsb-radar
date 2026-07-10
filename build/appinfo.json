@@ -1,0 +1,29 @@
+{
+    "displayName": "pebble-adsb-radar",
+    "uuid": "6e2d0a71-1031-46c3-95b4-3aad4b7bc3af",
+    "projectType": "moddable",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+        "emery",
+        "gabbro"
+    ],
+    "watchapp": {
+        "watchface": true
+    },
+    "messageKeys": {
+        "dummy": 10000
+    },
+    "resources": {
+        "media": []
+    },
+    "name": "pebble-adsb-radar",
+    "shortName": "pebble-adsb-radar",
+    "longName": "pebble-adsb-radar",
+    "versionLabel": "1.0.0",
+    "companyName": "MakeAwesomeHappen",
+    "appKeys": {
+        "dummy": 10000
+    },
+    "capabilities": []
+}

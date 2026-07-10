@@ -1,0 +1,486 @@
+{
+	"compilerOptions": {
+		"rootDir": "/Users/jasonmarquette/Projects/pebble/pebble-adsb-radar/src/embeddedjs",
+		"forceConsistentCasingInFileNames": true,
+		"module": "preserve",
+		"resolveJsonModule": true,
+		"outDir": "/Users/jasonmarquette/Projects/pebble/pebble-adsb-radar/build/mods/emery/mcrun/tmp/pebble/release/embeddedjs/files",
+		"paths": {
+			"ChatAudioIO": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ChatAudioIO"
+			],
+			"Resource": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/Resource"
+			],
+			"base64": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/base64"
+			],
+			"console": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/console"
+			],
+			"crc": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/crc"
+			],
+			"crypt": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/crypt"
+			],
+			"debug": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/debug"
+			],
+			"deepEqual": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/deepEqual"
+			],
+			"deflate": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/deflate"
+			],
+			"display": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/display"
+			],
+			"dns": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/dns"
+			],
+			"easing": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/easing"
+			],
+			"file": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/file"
+			],
+			"flash": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/flash"
+			],
+			"global": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/global"
+			],
+			"hex": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/hex"
+			],
+			"http": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/http"
+			],
+			"inflate": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/inflate"
+			],
+			"instrumentation": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/instrumentation"
+			],
+			"mcpack": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mcpack"
+			],
+			"mdns": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mdns"
+			],
+			"modules": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/modules"
+			],
+			"neopixel": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/neopixel"
+			],
+			"neostrand": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/neostrand"
+			],
+			"net": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/net"
+			],
+			"ping": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ping"
+			],
+			"preference": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/preference"
+			],
+			"qrcode": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/qrcode"
+			],
+			"securesocket": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/securesocket"
+			],
+			"sntp": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/sntp"
+			],
+			"socket": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/socket"
+			],
+			"telnet": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/telnet"
+			],
+			"time": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/time"
+			],
+			"timer": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/timer"
+			],
+			"uuid": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/uuid"
+			],
+			"websocket": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/websocket"
+			],
+			"wifi": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/wifi"
+			],
+			"zip": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/zip"
+			],
+			"bleclient": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/bleclient"
+			],
+			"bleserver": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/bleserver"
+			],
+			"btutils": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/btutils"
+			],
+			"connection": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/connection"
+			],
+			"gap": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/gap"
+			],
+			"gatt": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/gatt"
+			],
+			"hidclient": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/hidclient"
+			],
+			"index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/index"
+			],
+			"sm": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/ble/sm"
+			],
+			"commodetto/Bitmap": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/Bitmap"
+			],
+			"commodetto/BufferOut": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/BufferOut"
+			],
+			"commodetto/Convert": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/Convert"
+			],
+			"commodetto/PixelsOut": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/PixelsOut"
+			],
+			"commodetto/Poco": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/Poco"
+			],
+			"commodetto/ReadGIF": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/ReadGIF"
+			],
+			"commodetto/ReadPNG": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/ReadPNG"
+			],
+			"commodetto/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/index"
+			],
+			"commodetto/loadJPEG": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/loadJPEG"
+			],
+			"commodetto/outline": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/outline"
+			],
+			"commodetto/parseBMF": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/parseBMF"
+			],
+			"commodetto/parseBMP": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/parseBMP"
+			],
+			"commodetto/parseNFNT": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/parseNFNT"
+			],
+			"commodetto/parseRLE": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/parseRLE"
+			],
+			"commodetto/readJPEG": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/readJPEG"
+			],
+			"commodetto/readStream": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/commodetto/readStream"
+			],
+			"dns/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/dns/index"
+			],
+			"dns/parser": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/dns/parser"
+			],
+			"dns/serializer": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/dns/serializer"
+			],
+			"dns/server": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/dns/server"
+			],
+			"mc/config": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mc/config"
+			],
+			"mc/ffi": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mc/ffi"
+			],
+			"mc/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mc/index"
+			],
+			"mod/config": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mod/config"
+			],
+			"mod/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mod/index"
+			],
+			"pins/analog": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/analog"
+			],
+			"pins/audioin": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/audioin"
+			],
+			"pins/audioout": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/audioout"
+			],
+			"pins/digital": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/digital"
+			],
+			"pins/i2c": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/i2c"
+			],
+			"pins/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/index"
+			],
+			"pins/pwm": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/pwm"
+			],
+			"pins/rmt": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/rmt"
+			],
+			"pins/servo": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/servo"
+			],
+			"pins/smbus": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pins/smbus"
+			],
+			"piu/CombTransition": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/CombTransition"
+			],
+			"piu/MC-types": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/MC-types"
+			],
+			"piu/MC": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/MC"
+			],
+			"piu/QRCode": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/QRCode"
+			],
+			"piu/Sound": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/Sound"
+			],
+			"piu/Timeline": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/Timeline"
+			],
+			"piu/WipeTransition": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/WipeTransition"
+			],
+			"piu/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/index"
+			],
+			"piu/shape": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/shape"
+			],
+			"text/decoder": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/text/decoder"
+			],
+			"text/encoder": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/text/encoder"
+			],
+			"text/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/text/index"
+			],
+			"embedded:io/_common": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/_common"
+			],
+			"embedded:io/analog": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/analog"
+			],
+			"embedded:io/digital": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/digital"
+			],
+			"embedded:io/digitalbank": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/digitalbank"
+			],
+			"embedded:io/i2c": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/i2c"
+			],
+			"embedded:io/index": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/index"
+			],
+			"embedded:io/pulsecount": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/pulsecount"
+			],
+			"embedded:io/pwm": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/pwm"
+			],
+			"embedded:io/serial": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/serial"
+			],
+			"embedded:io/smbus": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/smbus"
+			],
+			"embedded:io/spi": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/spi"
+			],
+			"embedded:io/system": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/system"
+			],
+			"embedded:io/audio/in": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/audio/in"
+			],
+			"embedded:io/audio/out": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/audio/out"
+			],
+			"embedded:io/bluetoothle/_common": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/ble/_common"
+			],
+			"embedded:io/bluetoothle/central": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/ble/central"
+			],
+			"embedded:io/bluetoothle/peripheral": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/ble/peripheral"
+			],
+			"embedded:io/socket/listener": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/socket/listener"
+			],
+			"embedded:io/socket/tcp": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/socket/tcp"
+			],
+			"embedded:io/socket/tls": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/socket/tls"
+			],
+			"embedded:io/socket/udp": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_io/socket/udp"
+			],
+			"embedded:network/http/client": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/http/client"
+			],
+			"embedded:network/http/server": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/http/server"
+			],
+			"embedded:network/mqtt/client": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/mqtt/client"
+			],
+			"embedded:network/websocket/client": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/websocket/client"
+			],
+			"embedded:network/dns/resolver/udp": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/dns/resolver/udp"
+			],
+			"embedded:network/interface/ethernet": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/interface/ethernet"
+			],
+			"embedded:network/interface/wifi": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/interface/wifi"
+			],
+			"embedded:network/ntp/client": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/ntp/client"
+			],
+			"embedded:network/dnssd": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/dnssd"
+			],
+			"embedded:network/mdns": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded_network/mdns"
+			],
+			"embedded:RTC": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded/RTC"
+			],
+			"embedded:display": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded/display"
+			],
+			"embedded:update": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded/update"
+			],
+			"embedded:storage/files": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded/storage/files"
+			],
+			"embedded:storage/flash": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded/storage/flash"
+			],
+			"embedded:storage/key-value": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/embedded/storage/key-value"
+			],
+			"mqtt/js": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/mqtt/js"
+			],
+			"headers": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/headers"
+			],
+			"fetch": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/fetch"
+			],
+			"structuredClone": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/structuredClone"
+			],
+			"url": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/url"
+			],
+			"webstorage": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/webstorage"
+			],
+			"web/eventsource": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/eventsource"
+			],
+			"web/websocket": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/websocket"
+			],
+			"worker": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/web/worker"
+			],
+			"embedded:sensor/Accelerometer": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/accelerometer"
+			],
+			"embedded:sensor/Battery": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/battery"
+			],
+			"embedded:sensor/Compass": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/compass"
+			],
+			"embedded:sensor/Location": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/location"
+			],
+			"embedded:provider/builtin": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/device"
+			],
+			"pebble/button": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/button"
+			],
+			"pebble/dictation": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/dictation"
+			],
+			"pebble/message": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/message"
+			],
+			"pebble/vibes": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/vibes"
+			],
+			"pebble/wakeup": [
+				"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/wakeup"
+			]
+		},
+		"lib": [
+			"es2025"
+		],
+		"sourceMap": true,
+		"target": "es2025",
+		"allowJs": true,
+		"checkJs": true,
+		"noEmit": true,
+		"strict": true,
+		"noImplicitAny": false,
+		"noImplicitThis": false,
+		"strictNullChecks": false,
+		"types": [
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/global",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/piu",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/pebble/poco",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/easing",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/MC",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/piu/MC-types",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/xs/includes/xs",
+			"/Users/jasonmarquette/Library/Application Support/Pebble SDK/SDKs/4.17/toolchain/moddable/typings/global"
+		]
+	},
+	"files": [
+		"/Users/jasonmarquette/Projects/pebble/pebble-adsb-radar/src/embeddedjs/main.js"
+	]
+}
