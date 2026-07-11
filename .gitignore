@@ -1,5 +1,9 @@
 # Pebble build output
 build/
+.lock-waf_darwin_build
+.wafpickle-darwin-*
+config.log
+
 
 # Node dependencies
 node_modules/
@@ -17,3 +21,5 @@ __pycache__/
 
 # Not checking in release files
 release/
+
+*.pbw

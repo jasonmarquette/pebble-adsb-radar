@@ -290,7 +290,7 @@ function updateRadar() {
 
     {
       enableHighAccuracy: false,
-      maximumAge: 300000,
+      maximumAge: 60000,
       timeout: 10000
     }
   );
