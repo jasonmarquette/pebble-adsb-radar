@@ -1,7 +1,7 @@
 {
   "name": "pebble-adsb-radar",
   "author": "Jason Marquette",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [
     "pebble-app"
   ],
@@ -27,7 +27,8 @@
     },
     "messageKeys": [
       "STATUS",
-      "AIRCRAFT"
+      "AIRCRAFT",
+      "RADAR_RANGE"
     ],
     "resources": {
       "media": []
