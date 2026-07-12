@@ -215,7 +215,6 @@ Pebble.addEventListener("appmessage", function(event) {
   }
 
   if (requestedRange === radarRangeNm) {
-    sendStatus("LIVE", "");
     return;
   }
 

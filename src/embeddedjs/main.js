@@ -23,7 +23,7 @@ const DEFAULT_RANGE_INDEX = 1;
 
 let radarRangeIndex = DEFAULT_RANGE_INDEX;
 let radarRangeNm = RADAR_RANGES_NM[radarRangeIndex];
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 let aircraft = DEMO_MODE
   ? [
