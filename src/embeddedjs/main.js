@@ -5,8 +5,8 @@ import Message from "pebble/message";
 const render = new Poco(screen);
 
 const BG = render.makeColor(3, 10, 20);
-const GRID = render.makeColor(0, 150, 180);
-const GRID_DIM = render.makeColor(0, 70, 90);
+const GRID = render.makeColor(0, 150, 45);
+const GRID_DIM = render.makeColor(0, 70, 25);
 const SWEEP_EDGE = render.makeColor(0, 255, 120);
 const TARGET = render.makeColor(255, 220, 0);
 const TARGET_TEXT = render.makeColor(170, 220, 255);
@@ -23,14 +23,54 @@ const DEFAULT_RANGE_INDEX = 1;
 
 let radarRangeIndex = DEFAULT_RANGE_INDEX;
 let radarRangeNm = RADAR_RANGES_NM[radarRangeIndex];
-let aircraft = [];
+const DEMO_MODE = true;
+
+let aircraft = DEMO_MODE
+  ? [
+      {
+        callsign: "PIPISTRL",
+        distanceNm: 8.4,
+        bearing: 42,
+        track: 120,
+        altitude: 1385,
+      },
+      {
+        callsign: "ERJ-190",
+        distanceNm: 5.6,
+        bearing: 328,
+        track: 95,
+        altitude: 3925,
+      },
+      {
+        callsign: "PA-28R",
+        distanceNm: 7.8,
+        bearing: 262,
+        track: 45,
+        altitude: 2000,
+      },
+      {
+        callsign: "737 MAX",
+        distanceNm: 4.4,
+        bearing: 155,
+        track: 80,
+        altitude: 29450,
+      },
+      {
+        callsign: "C172",
+        distanceNm: 9.2,
+        bearing: 198,
+        track: 15,
+        altitude: 3500,
+      },
+    ]
+  : [];
 let statusText = "WAITING FOR PHONE";
 let sweepAngle = 0;
 let sweepTimer = null;
 let messageWritable = false;
 
 function degreesToRadians(degrees) {
-  return degrees * Math.PI / 180;
+  return (degrees * Math.PI) / 180;
 }
 
 function polarToScreen(centerX, centerY, distanceNm, bearing, radarRadius) {
@@ -39,7 +79,7 @@ function polarToScreen(centerX, centerY, distanceNm, bearing, radarRadius) {
 
   return {
     x: Math.round(centerX + Math.sin(angle) * scaledDistance),
-    y: Math.round(centerY - Math.cos(angle) * scaledDistance)
+    y: Math.round(centerY - Math.cos(angle) * scaledDistance),
   };
 }
 
@@ -81,7 +121,14 @@ function drawSweep(centerX, centerY, radius) {
   drawRadarLine(sweepAngle, SWEEP_EDGE, 2);
 }
 
-function drawAircraftMarker(item, centerX, centerY, radarRadius, isSelected, showLabel) {
+function drawAircraftMarker(
+  item,
+  centerX,
+  centerY,
+  radarRadius,
+  isSelected,
+  showLabel,
+) {
   if (item.distanceNm > radarRangeNm) {
     return;
   }
@@ -91,43 +138,100 @@ function drawAircraftMarker(item, centerX, centerY, radarRadius, isSelected, sho
     centerY,
     item.distanceNm,
     item.bearing,
-    radarRadius
+    radarRadius,
   );
-  const markerColor = isSelected ? SELECTED : TARGET;
 
-  render.fillRectangle(markerColor, point.x - 2, point.y - 2, 5, 5);
-
+  const markerColor = TARGET;
   const direction = item.track > 0 ? item.track : item.bearing;
-  const directionRadians = degreesToRadians(direction);
-  const noseX = Math.round(point.x + Math.sin(directionRadians) * 7);
-  const noseY = Math.round(point.y - Math.cos(directionRadians) * 7);
-  render.drawLine(point.x, point.y, noseX, noseY, markerColor, 2);
+  const angle = degreesToRadians(direction);
+
+  const noseX = Math.round(point.x + Math.sin(angle) * 7);
+  const noseY = Math.round(point.y - Math.cos(angle) * 7);
+  const tailX = Math.round(point.x - Math.sin(angle) * 4);
+  const tailY = Math.round(point.y + Math.cos(angle) * 4);
+
+  // Fuselage
+  render.drawLine(tailX, tailY, noseX, noseY, markerColor, isSelected ? 2 : 1);
+
+  // Wings
+  const wingAngle = angle + Math.PI / 2;
+  const wing1X = Math.round(point.x + Math.sin(wingAngle) * 4);
+  const wing1Y = Math.round(point.y - Math.cos(wingAngle) * 4);
+  const wing2X = Math.round(point.x - Math.sin(wingAngle) * 4);
+  const wing2Y = Math.round(point.y + Math.cos(wingAngle) * 4);
+
+  render.drawLine(
+    wing1X,
+    wing1Y,
+    wing2X,
+    wing2Y,
+    markerColor,
+    isSelected ? 2 : 1,
+  );
+
+  // Tail
+  const tailWing1X = Math.round(tailX + Math.sin(wingAngle) * 2);
+  const tailWing1Y = Math.round(tailY - Math.cos(wingAngle) * 2);
+  const tailWing2X = Math.round(tailX - Math.sin(wingAngle) * 2);
+  const tailWing2Y = Math.round(tailY + Math.cos(wingAngle) * 2);
+
+  render.drawLine(
+    tailWing1X,
+    tailWing1Y,
+    tailWing2X,
+    tailWing2Y,
+    markerColor,
+    1,
+  );
 
   if (!showLabel) {
     return;
   }
 
-  const callsign = item.callsign && item.callsign.length > 0
-    ? item.callsign.slice(0, 7)
-    : "UNKNOWN";
-  const detailText = item.distanceNm.toFixed(1) + "NM " +
+  const callsign =
+    item.callsign && item.callsign.length > 0
+      ? item.callsign.slice(0, 8)
+      : "UNKNOWN";
+
+  const detailText =
+    item.distanceNm.toFixed(1) +
+    "NM " +
     (item.altitude > 0 ? item.altitude + "FT" : "ALT--");
-  const labelWidth = Math.max(
-    render.getTextWidth(callsign, SMALL_FONT),
-    render.getTextWidth(detailText, SMALL_FONT)
+
+  const callsignWidth = render.getTextWidth(callsign, SMALL_FONT);
+  const detailWidth = render.getTextWidth(detailText, SMALL_FONT);
+  const labelWidth = Math.max(callsignWidth, detailWidth);
+
+  let labelX;
+  let labelY;
+
+  // Put labels away from the center of the radar.
+  if (point.x >= centerX) {
+    labelX = point.x + 6;
+  } else {
+    labelX = point.x - labelWidth - 6;
+  }
+
+  if (point.y >= centerY) {
+    labelY = point.y + 5;
+  } else {
+    labelY = point.y - 27;
+  }
+
+  // Keep labels inside the round display.
+  labelY = Math.max(18, Math.min(labelY, render.height - 55));
+
+  const verticalOffset = Math.abs(labelY - centerY);
+  const curvedMargin = Math.round(14 + verticalOffset * 0.22);
+
+  labelX = Math.max(
+    curvedMargin,
+    Math.min(labelX, render.width - labelWidth - curvedMargin),
   );
-  let labelX = point.x + 7;
-  let labelY = point.y - 12;
 
-  if (labelX + labelWidth > render.width - 8) {
-    labelX = point.x - labelWidth - 7;
-  }
-  if (labelY < 14) {
-    labelY = point.y + 7;
-  }
+  render.drawText(callsign, LABEL_FONT, WHITE, labelX, labelY);
 
-  render.drawText(callsign, SMALL_FONT, SELECTED, labelX, labelY);
-  render.drawText(detailText, SMALL_FONT, TARGET_TEXT, labelX, labelY + 13);
+  render.drawText(detailText, SMALL_FONT, TARGET_TEXT, labelX, labelY + 15);
 }
 
 function parseAircraft(text) {
@@ -158,7 +262,7 @@ function parseAircraft(text) {
       distanceNm: distanceTenths / 10,
       bearing,
       track: Number.isFinite(track) ? track : 0,
-      altitude: Number.isFinite(altitude) ? altitude : 0
+      altitude: Number.isFinite(altitude) ? altitude : 0,
     });
   }
 
@@ -166,15 +270,15 @@ function parseAircraft(text) {
 }
 
 function visibleAircraft() {
-  return aircraft.filter(function(item) {
+  return aircraft.filter(function (item) {
     return item.distanceNm <= radarRangeNm;
   });
 }
 
 function drawRadar() {
   const centerX = Math.round(render.width / 2);
-  const centerY = 102;
-  const radarRadius = 98;
+  const centerY = Math.round(render.height / 2);
+  const radarRadius = 110;
   const visible = visibleAircraft();
   const selectedAircraft = visible.length > 0 ? visible[0] : null;
 
@@ -186,13 +290,7 @@ function drawRadar() {
   for (let i = 1; i <= 5; i++) {
     const radius = Math.round((radarRadius * i) / 5);
 
-    drawCircleOutline(
-      i === 5 ? GRID : GRID_DIM,
-      centerX,
-      centerY,
-      radius,
-      i === 5 ? 2 : 1
-    );
+    drawCircleOutline(i === 5 ? GRID : GRID_DIM, centerX, centerY, radius, 1);
   }
 
   render.drawLine(
@@ -201,7 +299,7 @@ function drawRadar() {
     centerX + radarRadius,
     centerY,
     GRID_DIM,
-    1
+    1,
   );
 
   render.drawLine(
@@ -210,19 +308,13 @@ function drawRadar() {
     centerX,
     centerY + radarRadius,
     GRID_DIM,
-    1
+    1,
   );
 
   render.drawLine(centerX, 4, centerX, 11, WHITE, 2);
   drawCenteredText("N", LABEL_FONT, WHITE, 12);
 
-  render.fillRectangle(
-    CENTER_DOT,
-    centerX - 2,
-    centerY - 2,
-    5,
-    5
-  );
+  render.fillRectangle(CENTER_DOT, centerX - 2, centerY - 2, 5, 5);
 
   const countText = visible.length + " AC";
   render.drawText(countText, SMALL_FONT, TARGET_TEXT, 8, 6);
@@ -234,46 +326,18 @@ function drawRadar() {
       centerY,
       radarRadius,
       i === 0,
-      i === 0
+      true,
     );
   }
 
-  if (selectedAircraft) {
-    const callsign =
-      selectedAircraft.callsign && selectedAircraft.callsign.length > 0
-        ? selectedAircraft.callsign.slice(0, 10)
-        : "UNKNOWN";
-
-    const altitudeText =
-      selectedAircraft.altitude > 0
-        ? selectedAircraft.altitude + " FT"
-        : "ALT --";
-
-    const distanceText =
-      selectedAircraft.distanceNm.toFixed(1) + " NM";
-
-    drawCenteredText(
-      callsign,
-      LABEL_FONT,
-      WHITE,
-      202
-    );
-
-    drawCenteredText(
-      altitudeText + "  " + distanceText,
-      SMALL_FONT,
-      TARGET_TEXT,
-      217
-    );
-  } else {
+  if (!selectedAircraft) {
     drawCenteredText(
       statusText,
       SMALL_FONT,
       statusText === "LIVE" ? SWEEP_EDGE : GRAY,
-      211
+      211,
     );
   }
-
   const rangeText = "< " + radarRangeNm + " NM >";
   const rangeTextWidth = render.getTextWidth(rangeText, LABEL_FONT);
   const badgeWidth = rangeTextWidth + 18;
@@ -281,13 +345,7 @@ function drawRadar() {
   const badgeX = Math.round((render.width - badgeWidth) / 2);
   const badgeY = render.height - 26;
 
-  render.fillRectangle(
-    BG,
-    badgeX,
-    badgeY,
-    badgeWidth,
-    badgeHeight
-  );
+  render.fillRectangle(BG, badgeX, badgeY, badgeWidth, badgeHeight);
 
   render.drawLine(
     badgeX,
@@ -295,7 +353,7 @@ function drawRadar() {
     badgeX + badgeWidth - 1,
     badgeY,
     SWEEP_EDGE,
-    2
+    2,
   );
 
   render.drawLine(
@@ -304,7 +362,7 @@ function drawRadar() {
     badgeX + badgeWidth - 1,
     badgeY + badgeHeight - 1,
     SWEEP_EDGE,
-    2
+    2,
   );
 
   render.drawLine(
@@ -313,7 +371,7 @@ function drawRadar() {
     badgeX,
     badgeY + badgeHeight - 1,
     SWEEP_EDGE,
-    2
+    2,
   );
 
   render.drawLine(
@@ -322,16 +380,10 @@ function drawRadar() {
     badgeX + badgeWidth - 1,
     badgeY + badgeHeight - 1,
     SWEEP_EDGE,
-    2
+    2,
   );
 
-  render.drawText(
-    rangeText,
-    LABEL_FONT,
-    WHITE,
-    badgeX + 9,
-    badgeY + 3
-  );
+  render.drawText(rangeText, LABEL_FONT, WHITE, badgeX + 9, badgeY + 3);
 
   render.end();
 }
@@ -351,7 +403,10 @@ function sendRangeToPhone() {
 
 function changeRadarRange(direction) {
   const nextIndex = radarRangeIndex + direction;
-  radarRangeIndex = Math.max(0, Math.min(RADAR_RANGES_NM.length - 1, nextIndex));
+  radarRangeIndex = Math.max(
+    0,
+    Math.min(RADAR_RANGES_NM.length - 1, nextIndex),
+  );
 
   const nextRange = RADAR_RANGES_NM[radarRangeIndex];
   if (nextRange === radarRangeNm) {
@@ -368,11 +423,11 @@ const message = new Message({
   onReadable() {
     const received = this.read();
 
-    received.forEach(function(value, key) {
+    received.forEach(function (value, key) {
       if (key === "STATUS") {
         statusText = String(value);
       }
-      if (key === "AIRCRAFT") {
+      if (key === "AIRCRAFT" && !DEMO_MODE) {
         aircraft = parseAircraft(String(value));
       }
       if (key === "RADAR_RANGE") {
@@ -399,7 +454,7 @@ const message = new Message({
     messageWritable = false;
     statusText = "PHONE DISCONNECTED";
     drawRadar();
-  }
+  },
 });
 
 new Button({
@@ -414,7 +469,7 @@ new Button({
     } else if (type === "down") {
       changeRadarRange(-1);
     }
-  }
+  },
 });
 
 function startSweepAnimation() {
@@ -422,7 +477,7 @@ function startSweepAnimation() {
     clearInterval(sweepTimer);
   }
 
-  sweepTimer = setInterval(function() {
+  sweepTimer = setInterval(function () {
     sweepAngle = (sweepAngle + 4) % 360;
     drawRadar();
   }, 80);
