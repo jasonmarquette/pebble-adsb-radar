@@ -173,8 +173,8 @@ function visibleAircraft() {
 
 function drawRadar() {
   const centerX = Math.round(render.width / 2);
-  const centerY = Math.round(render.height / 2) - 26;
-  const radarRadius = Math.floor(Math.min(render.width, render.height) / 2) - 40;
+  const centerY = 102;
+  const radarRadius = 98;
   const visible = visibleAircraft();
   const selectedAircraft = visible.length > 0 ? visible[0] : null;
 
@@ -182,9 +182,18 @@ function drawRadar() {
   render.fillRectangle(BG, 0, 0, render.width, render.height);
 
   drawSweep(centerX, centerY, radarRadius);
-  drawCircleOutline(GRID_DIM, centerX, centerY, Math.round(radarRadius * 0.33));
-  drawCircleOutline(GRID_DIM, centerX, centerY, Math.round(radarRadius * 0.66));
-  drawCircleOutline(GRID, centerX, centerY, radarRadius, 2);
+
+  for (let i = 1; i <= 5; i++) {
+    const radius = Math.round((radarRadius * i) / 5);
+
+    drawCircleOutline(
+      i === 5 ? GRID : GRID_DIM,
+      centerX,
+      centerY,
+      radius,
+      i === 5 ? 2 : 1
+    );
+  }
 
   render.drawLine(
     centerX - radarRadius,
@@ -194,6 +203,7 @@ function drawRadar() {
     GRID_DIM,
     1
   );
+
   render.drawLine(
     centerX,
     centerY - radarRadius,
@@ -203,10 +213,21 @@ function drawRadar() {
     1
   );
 
-  render.fillRectangle(CENTER_DOT, centerX - 2, centerY - 2, 5, 5);
-  drawCenteredText("N", LABEL_FONT, WHITE, 3);
+  render.drawLine(centerX, 4, centerX, 11, WHITE, 2);
+  drawCenteredText("N", LABEL_FONT, WHITE, 12);
 
-  for (let i = 0; i < visible.length; i++) {
+  render.fillRectangle(
+    CENTER_DOT,
+    centerX - 2,
+    centerY - 2,
+    5,
+    5
+  );
+
+  const countText = visible.length + " AC";
+  render.drawText(countText, SMALL_FONT, TARGET_TEXT, 8, 6);
+
+  for (let i = visible.length - 1; i >= 0; i--) {
     drawAircraftMarker(
       visible[i],
       centerX,
@@ -218,41 +239,99 @@ function drawRadar() {
   }
 
   if (selectedAircraft) {
-    const callsign = selectedAircraft.callsign && selectedAircraft.callsign.length > 0
-      ? selectedAircraft.callsign
-      : "UNKNOWN";
-    const distanceText = selectedAircraft.distanceNm.toFixed(1) + " NM";
-    const altitudeText = selectedAircraft.altitude > 0
-      ? selectedAircraft.altitude + " FT"
-      : "ALT --";
+    const callsign =
+      selectedAircraft.callsign && selectedAircraft.callsign.length > 0
+        ? selectedAircraft.callsign.slice(0, 10)
+        : "UNKNOWN";
+
+    const altitudeText =
+      selectedAircraft.altitude > 0
+        ? selectedAircraft.altitude + " FT"
+        : "ALT --";
+
+    const distanceText =
+      selectedAircraft.distanceNm.toFixed(1) + " NM";
 
     drawCenteredText(
-      callsign + "  " + distanceText,
+      callsign,
       LABEL_FONT,
       WHITE,
-      render.height - 58
+      202
     );
+
     drawCenteredText(
-      altitudeText + " | " + visible.length + " AC | " + radarRangeNm + " NM",
+      altitudeText + "  " + distanceText,
       SMALL_FONT,
-      TARGET,
-      render.height - 41
+      TARGET_TEXT,
+      217
     );
+  } else {
     drawCenteredText(
       statusText,
       SMALL_FONT,
       statusText === "LIVE" ? SWEEP_EDGE : GRAY,
-      render.height - 24
+      211
     );
-  } else {
-    drawCenteredText(
-      "0 AC | " + radarRangeNm + " NM",
-      LABEL_FONT,
-      WHITE,
-      render.height - 56
-    );
-    drawCenteredText(statusText, SMALL_FONT, GRAY, render.height - 32);
   }
+
+  const rangeText = "< " + radarRangeNm + " NM >";
+  const rangeTextWidth = render.getTextWidth(rangeText, LABEL_FONT);
+  const badgeWidth = rangeTextWidth + 18;
+  const badgeHeight = 22;
+  const badgeX = Math.round((render.width - badgeWidth) / 2);
+  const badgeY = render.height - 26;
+
+  render.fillRectangle(
+    BG,
+    badgeX,
+    badgeY,
+    badgeWidth,
+    badgeHeight
+  );
+
+  render.drawLine(
+    badgeX,
+    badgeY,
+    badgeX + badgeWidth - 1,
+    badgeY,
+    SWEEP_EDGE,
+    2
+  );
+
+  render.drawLine(
+    badgeX,
+    badgeY + badgeHeight - 1,
+    badgeX + badgeWidth - 1,
+    badgeY + badgeHeight - 1,
+    SWEEP_EDGE,
+    2
+  );
+
+  render.drawLine(
+    badgeX,
+    badgeY,
+    badgeX,
+    badgeY + badgeHeight - 1,
+    SWEEP_EDGE,
+    2
+  );
+
+  render.drawLine(
+    badgeX + badgeWidth - 1,
+    badgeY,
+    badgeX + badgeWidth - 1,
+    badgeY + badgeHeight - 1,
+    SWEEP_EDGE,
+    2
+  );
+
+  render.drawText(
+    rangeText,
+    LABEL_FONT,
+    WHITE,
+    badgeX + 9,
+    badgeY + 3
+  );
 
   render.end();
 }
