@@ -121,12 +121,17 @@ function serializeAircraft(aircraft) {
 }
 
 function sendStatus(status, aircraftText) {
+  const payload = {
+    STATUS: status,
+    RADAR_RANGE: radarRangeNm
+  };
+
+  if (aircraftText !== undefined) {
+    payload.AIRCRAFT = aircraftText;
+  }
+
   Pebble.sendAppMessage(
-    {
-      STATUS: status,
-      AIRCRAFT: aircraftText || "",
-      RADAR_RANGE: radarRangeNm
-    },
+    payload,
     function() {
       console.log("Sent update to watch: " + status);
     },
@@ -151,7 +156,7 @@ function fetchAircraft(latitude, longitude) {
 
     if (request.status < 200 || request.status >= 300) {
       console.log("ADS-B HTTP error: " + request.status);
-      sendStatus("HTTP " + request.status, "");
+      sendStatus("HTTP " + request.status);
       return;
     }
 
@@ -164,14 +169,14 @@ function fetchAircraft(latitude, longitude) {
       sendStatus("LIVE", compactAircraft);
     } catch (error) {
       console.log("JSON processing error: " + error);
-      sendStatus("DATA ERROR", "");
+      sendStatus("DATA ERROR");
     }
   };
 
   request.onerror = function() {
     requestRunning = false;
     console.log("ADS-B network request failed");
-    sendStatus("NETWORK ERROR", "");
+    sendStatus("NETWORK ERROR");
   };
 
   request.send();
@@ -184,20 +189,20 @@ function updateRadar() {
   }
 
   requestRunning = true;
-  sendStatus("GETTING GPS", "");
+  sendStatus("GETTING GPS");
 
   navigator.geolocation.getCurrentPosition(
     function(position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
       console.log("Location: " + latitude + ", " + longitude);
-      sendStatus("LOADING ADS-B", "");
+      sendStatus("LOADING ADS-B");
       fetchAircraft(latitude, longitude);
     },
     function(error) {
       requestRunning = false;
       console.log("Location error " + error.code + ": " + error.message);
-      sendStatus("GPS ERROR", "");
+      sendStatus("GPS ERROR");
     },
     {
       enableHighAccuracy: false,
