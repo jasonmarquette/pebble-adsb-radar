@@ -68,6 +68,7 @@ let statusText = "WAITING FOR PHONE";
 let sweepAngle = 0;
 let sweepTimer = null;
 let messageWritable = false;
+let rangeSendPending = false;
 
 function degreesToRadians(degrees) {
   return (degrees * Math.PI) / 180;
@@ -388,17 +389,31 @@ function drawRadar() {
   render.end();
 }
 
-function sendRangeToPhone() {
-  if (!messageWritable) {
+function flushRangeToPhone() {
+  if (!messageWritable || !rangeSendPending) {
     return;
   }
 
   const outgoing = new Map();
   outgoing.set("RADAR_RANGE", radarRangeNm);
-  message.write(outgoing);
+
+  messageWritable = false;
+  rangeSendPending = false;
+
+  try {
+    message.write(outgoing);
+    console.log("Radar range changed to " + radarRangeNm + " NM");
+  } catch (error) {
+    rangeSendPending = true;
+    console.log("Radar range send deferred: " + error);
+  }
+}
+
+function sendRangeToPhone() {
+  rangeSendPending = true;
   statusText = "RANGE " + radarRangeNm + " NM";
-  console.log("Radar range changed to " + radarRangeNm + " NM");
   drawRadar();
+  flushRangeToPhone();
 }
 
 function changeRadarRange(direction) {
@@ -447,7 +462,7 @@ const message = new Message({
   onWritable() {
     messageWritable = true;
     console.log("Phone messaging ready");
-    sendRangeToPhone();
+    flushRangeToPhone();
   },
 
   onSuspend() {
