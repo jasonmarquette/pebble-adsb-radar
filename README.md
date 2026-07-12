@@ -18,6 +18,7 @@ The app uses the connected phone's GPS location to retrieve nearby aircraft from
 - Callsign, distance, altitude, aircraft count, and current range display
 - Animated radar sweep
 - Compact phone-to-watch messaging
+- Queued watch-to-phone range updates when messaging is temporarily busy
 - Pebble Round 2 (`gabbro`) and Pebble Time 2 (`emery`) support
 
 ## Watch Controls
@@ -110,11 +111,12 @@ The watch-side code:
 
 1. Handles Up and Down button presses.
 2. Selects a supported radar range.
-3. Sends the selected range to the phone.
-4. Receives and parses aircraft records.
-5. Draws and animates the radar.
-6. Scales targets against the selected range.
-7. Displays the closest visible aircraft and current range.
+3. Queues the selected range until the phone messaging channel is writable.
+4. Sends the latest pending range to the phone.
+5. Receives and parses aircraft records.
+6. Draws and animates the radar.
+7. Scales targets against the selected range.
+8. Displays the closest visible aircraft and current range.
 
 This design avoids transferring the full ADS-B JSON response to the watch, reducing memory use and improving stability.
 
@@ -133,6 +135,14 @@ The app uses three message keys:
 - `STATUS`: connection and loading status
 - `AIRCRAFT`: compact aircraft records
 - `RADAR_RANGE`: selected range in nautical miles
+
+## Messaging Reliability
+
+Pebble messaging can temporarily report that the outbound channel is not writable, especially during app startup or while another message is still being delivered.
+
+The watch keeps the newest selected radar range in a pending state and sends it when the messaging channel becomes writable. This prevents range-button presses from causing an `Error: not writable` failure.
+
+If several range changes occur while messaging is busy, only the most recent selected range needs to be sent.
 
 ## ADS-B Data Source
 
@@ -343,6 +353,8 @@ Current behavior:
 ## Troubleshooting
 
 ### Range buttons do not update the radar
+
+Range updates are queued until the phone messaging channel becomes writable. A brief delay during startup is normal, but the latest selected range should be delivered automatically.
 
 Confirm `package.json` includes:
 
