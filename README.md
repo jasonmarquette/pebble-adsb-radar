@@ -1,5 +1,6 @@
 # Pebble ADS-B Radar
 
+![ADS-B Radar](images/banner.png)
 A live ADS-B aircraft radar app for **Pebble Round 2** and **Pebble Time 2**.
 
 The app uses the connected phone's GPS location to retrieve nearby aircraft from the ADS-B.fi open data API. The phone processes the response and sends a compact aircraft list to the watch, where targets are plotted on an animated circular radar display.
