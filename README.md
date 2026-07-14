@@ -1,450 +1,172 @@
 # Pebble ADS-B Radar
 
+![Release](https://img.shields.io/github/v/release/jasonmarquette/pebble-adsb-radar)
+![License](https://img.shields.io/github/license/jasonmarquette/pebble-adsb-radar)
+
 ![ADS-B Radar](images/banner.png)
-A live ADS-B aircraft radar app for **Pebble Round 2** and **Pebble Time 2**.
 
-The app uses the connected phone's GPS location to retrieve nearby aircraft from the ADS-B.fi open data API. The phone processes the response and sends a compact aircraft list to the watch, where targets are plotted on an animated circular radar display.
+A live ADS-B aircraft radar application for **Pebble Round 2** and
+**Pebble Time 2**. The connected phone retrieves nearby aircraft from
+the ADS-B.fi API, filters and compresses the data, then sends a compact
+aircraft list to the watch for rendering on a smooth animated radar
+display.
 
-## Features
+------------------------------------------------------------------------
 
-- Live nearby aircraft from ADS-B.fi
-- Phone-based GPS location
-- Adjustable **5, 10, 20, or 40 nautical mile** radar range
-- **10 NM default range**
-- Watch-button range controls
-- Up to 8 nearby aircraft
-- Aircraft plotted by bearing and distance
-- Closest aircraft selected automatically
-- Selected aircraft highlighted in magenta
-- Callsign, distance, altitude, aircraft count, and current range display
-- Animated radar sweep
-- Compact phone-to-watch messaging
-- Queued watch-to-phone range updates when messaging is temporarily busy
-- Pebble Round 2 (`gabbro`) and Pebble Time 2 (`emery`) support
+# What's New in v1.1.0
 
-## Watch Controls
+-   Live ADS-B mode restored as the default
+-   Adjustable 5, 10, 20 and 40 NM radar ranges
+-   Automatic highlighting of the closest aircraft
+-   Callsigns shown for every visible aircraft
+-   Improved aircraft-shaped markers with heading indication
+-   Cleaner label placement optimized for round displays
+-   Improved phone/watch messaging reliability
+-   Updated documentation and screenshots
 
-| Button | Action |
-|---|---|
-| **Up** | Increase radar range |
-| **Down** | Decrease radar range |
+------------------------------------------------------------------------
 
-Available ranges:
+# Features
 
-```text
-5 NM → 10 NM → 20 NM → 40 NM
+-   Live ADS-B.fi aircraft data
+-   Phone GPS location
+-   Animated radar sweep
+-   Five evenly spaced radar range rings
+-   Adjustable 5 / 10 / 20 / 40 NM ranges
+-   Up to 8 nearby aircraft
+-   Automatic nearest-aircraft selection
+-   Callsigns for every visible aircraft
+-   Distance and altitude shown for the selected aircraft
+-   Aircraft count indicator
+-   Directional aircraft symbols
+-   Pebble Round 2 and Pebble Time 2 support
+
+# Watch Controls
+
+  Button   Action
+  -------- ----------------------
+  Up       Increase radar range
+  Down     Decrease radar range
+
+Ranges:
+
+``` text
+5 → 10 → 20 → 40 NM
 ```
 
-The app starts at **10 NM** each time it launches.
+# Radar Display
 
-Pressing Up or Down changes the range one step. It stops at 5 NM or 40 NM instead of wrapping around.
+-   Red center marker = your position
+-   Yellow aircraft = nearby traffic
+-   Closest aircraft emphasized with a thicker marker
+-   Callsigns displayed for all visible aircraft
+-   Distance and altitude displayed for the closest aircraft
+-   Five evenly spaced range rings
+-   North indicator at the top
+-   Aircraft count in the upper-left corner
+-   Current radar range shown in a badge at the bottom
 
-When the range changes, the watch:
+# Architecture
 
-1. Rescales the aircraft positions.
-2. Updates the displayed range.
-3. Sends the selected range to the phone.
-4. Requests a fresh ADS-B update.
-
-The phone uses that same range in the ADS-B.fi request and when filtering aircraft, keeping the watch display and data query synchronized.
-
-## Radar Display
-
-- **Red center marker:** user's current location
-- **Yellow markers:** nearby aircraft
-- **Magenta marker:** selected aircraft
-- **Cyan rings:** range rings
-- **Green line:** animated radar sweep
-- **North:** always at the top
-
-The outer ring represents the selected range. The inner rings represent approximately one-third and two-thirds of that range.
-
-At the default 10 NM setting:
-
-- Inner ring: approximately 3.3 NM
-- Middle ring: approximately 6.6 NM
-- Outer ring: 10 NM
-
-The lower information area includes the aircraft information, visible aircraft count, and selected range. Example:
-
-```text
-3500 FT | 6 AC | 20 NM
+``` text
+ADS-B.fi
+     │
+ Phone GPS
+     │
+ Phone (PKJS)
+  • Fetch aircraft
+  • Calculate distance/bearing
+  • Filter & sort
+  • Compress payload
+     │
+ AppMessage
+     │
+ Pebble Watch
+  • Parse aircraft
+  • Draw radar
+  • Animate sweep
 ```
 
-## Supported Platforms
+# Building
 
-| Platform | Device |
-|---|---|
-| `gabbro` | Pebble Round 2 |
-| `emery` | Pebble Time 2 |
-
-## Architecture
-
-### Phone side
-
-File:
-
-```text
-src/pkjs/index.js
-```
-
-The phone-side code:
-
-1. Gets the phone's current GPS coordinates.
-2. Receives range changes from the watch.
-3. Requests ADS-B.fi data using the selected range.
-4. Filters aircraft without valid coordinates.
-5. Calculates aircraft distance and bearing.
-6. Removes aircraft outside the selected range.
-7. Sorts aircraft from nearest to farthest.
-8. Keeps up to 8 aircraft.
-9. Sends a compact payload and current range to the watch.
-
-### Watch side
-
-File:
-
-```text
-src/embeddedjs/main.js
-```
-
-The watch-side code:
-
-1. Handles Up and Down button presses.
-2. Selects a supported radar range.
-3. Queues the selected range until the phone messaging channel is writable.
-4. Sends the latest pending range to the phone.
-5. Receives and parses aircraft records.
-6. Draws and animates the radar.
-7. Scales targets against the selected range.
-8. Displays the closest visible aircraft and current range.
-
-This design avoids transferring the full ADS-B JSON response to the watch, reducing memory use and improving stability.
-
-## AppMessage Keys
-
-The app uses three message keys:
-
-```json
-"messageKeys": [
-  "STATUS",
-  "AIRCRAFT",
-  "RADAR_RANGE"
-]
-```
-
-- `STATUS`: connection and loading status
-- `AIRCRAFT`: compact aircraft records
-- `RADAR_RANGE`: selected range in nautical miles
-
-## Messaging Reliability
-
-Pebble messaging can temporarily report that the outbound channel is not writable, especially during app startup or while another message is still being delivered.
-
-The watch keeps the newest selected radar range in a pending state and sends it when the messaging channel becomes writable. This prevents range-button presses from causing an `Error: not writable` failure.
-
-If several range changes occur while messaging is busy, only the most recent selected range needs to be sent.
-
-## ADS-B Data Source
-
-Aircraft data comes from the ADS-B.fi open data API.
-
-Default 10 NM request format:
-
-```text
-https://opendata.adsb.fi/api/v3/lat/LATITUDE/lon/LONGITUDE/dist/10
-```
-
-A selected 40 NM range changes the final portion to:
-
-```text
-/dist/40
-```
-
-The `dist` value is expressed in nautical miles.
-
-## Project Structure
-
-```text
-pebble-adsb-radar/
-├── .gitignore
-├── package.json
-├── README.md
-├── wscript
-└── src/
-    ├── c/
-    │   └── mdbl.c
-    ├── embeddedjs/
-    │   ├── main.js
-    │   └── manifest.json
-    └── pkjs/
-        └── index.js
-```
-
-## Requirements
-
-- Pebble SDK 4.17 or newer
-- Pebble Tool 5
-- Python 3.13
-- Node.js
-- macOS or Linux
-- Supported emulator or physical Pebble
-- Connected phone with location permission
-- Internet access
-
-## Install Pebble Tool
-
-Install `uv`:
-
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-Restart the terminal, then install Pebble Tool:
-
-```bash
-uv tool install pebble-tool --python 3.13
-```
-
-Verify:
-
-```bash
-pebble --version
-```
-
-## Install the Pebble SDK
-
-```bash
-pebble sdk install latest
-pebble sdk list
-```
-
-## macOS Emulator Dependency
-
-```bash
-brew install libpng
-```
-
-If needed:
-
-```bash
-brew reinstall libpng
-brew link --overwrite libpng
-```
-
-## Clone and Install Dependencies
-
-```bash
-git clone https://github.com/jasonmarquette/pebble-adsb-radar.git
-cd pebble-adsb-radar
-pebble package install
-```
-
-The project uses:
-
-```text
-@moddable/pebbleproxy
-```
-
-## Build
-
-```bash
+``` bash
 pebble clean
 pebble build
 ```
 
-The compiled `.pbw` bundle is created in:
+The compiled `.pbw` file is created in the `build/` directory.
 
-```text
-build/
-```
+# Installation
 
-## Pebble Round 2 Emulator
+## Emulator
 
-```bash
-pebble clean
-pebble build
+``` bash
 pebble install --emulator gabbro
 ```
 
-View logs:
+or
 
-```bash
-pebble logs --emulator gabbro
-```
-
-Verbose installation:
-
-```bash
-pebble install --emulator gabbro -vvvv
-```
-
-Stop the emulator:
-
-```bash
-pebble kill
-```
-
-## Pebble Time 2 Emulator
-
-```bash
-pebble clean
-pebble build
+``` bash
 pebble install --emulator emery
 ```
 
-## Install on a Physical Pebble
+## Physical Watch
 
-1. Enable the developer connection in the Pebble phone app.
-2. Make sure the phone and computer are reachable on the same network.
-3. Note the developer connection IP address.
-4. Install the app:
-
-```bash
-pebble install --phone PHONE_IP_ADDRESS
-```
-
-Example:
-
-```bash
-pebble install --phone 192.168.1.123
-```
-
-You can save the address:
-
-```bash
-export PEBBLE_PHONE=192.168.1.123
+``` bash
+export PEBBLE_PHONE=<phone-ip>
 pebble install
 ```
 
-## Configuration
+# Configuration
 
-Range choices and the default are defined in:
-
-```text
-src/embeddedjs/main.js
-```
-
-```javascript
+``` javascript
 const RADAR_RANGES_NM = [5, 10, 20, 40];
 const DEFAULT_RANGE_INDEX = 1;
 ```
 
-Array index `1` is `10`, so the default is 10 NM.
+Default range is **10 NM**.
 
-Phone-side settings are defined in:
+Phone refresh interval:
 
-```text
-src/pkjs/index.js
-```
-
-```javascript
-const MAX_AIRCRAFT = 8;
+``` javascript
 const REFRESH_MS = 7200;
 ```
 
-Current behavior:
+# Troubleshooting
 
-- Available ranges: 5, 10, 20, and 40 NM
-- Default range: 10 NM
-- Maximum aircraft: 8
-- Automatic refresh: approximately every 7.2 seconds
-- Immediate refresh after changing range
+## No aircraft displayed
 
-## Troubleshooting
+-   Verify phone location permissions.
+-   Ensure aircraft exist within the selected range.
+-   Confirm internet connectivity.
+-   Check Pebble logs.
 
-### Range buttons do not update the radar
+## Waiting for phone
 
-Range updates are queued until the phone messaging channel becomes writable. A brief delay during startup is normal, but the latest selected range should be delivered automatically.
+Verify AppMessage keys match between the phone and watch.
 
-Confirm `package.json` includes:
+# Planned Features
 
-```json
-"messageKeys": [
-  "STATUS",
-  "AIRCRAFT",
-  "RADAR_RANGE"
-]
-```
+-   Aircraft detail screen
+-   Ground speed display
+-   Aircraft registration and type
+-   Save radar range between launches
+-   Configurable refresh interval
+-   Aircraft trails
+-   Sweep "blip" effect
+-   Altitude-based marker colors
 
-Then rebuild and reinstall:
+# Privacy
 
-```bash
-pebble clean
-pebble build
-pebble install --emulator gabbro
-```
+The application uses the connected phone's current location only to
+retrieve nearby aircraft. No location history is intentionally stored.
 
-Watch the logs while pressing Up or Down:
+# License
 
-```bash
-pebble logs --emulator gabbro
-```
+MIT License
 
-### App stays on `WAITING FOR PHONE`
-
-Confirm all three message keys are present and reinstall the app so the updated phone-side JavaScript is loaded.
-
-### No aircraft appear
-
-Possible causes:
-
-- No aircraft are within the selected range
-- The range is set to 5 NM and no aircraft are nearby
-- Phone location is unavailable
-- Location permission is denied
-- ADS-B.fi request failed
-- Phone-side PebbleKit JavaScript is not running
-
-### Large ADS-B response crashes the watch
-
-The intended data flow is:
-
-```text
-ADS-B.fi
-   ↓
-Phone-side PKJS
-   ↓
-Compact aircraft payload
-   ↓
-Pebble watch
-```
-
-The full ADS-B response should not be fetched directly by the watch.
-
-## Privacy
-
-The application uses the connected phone's current location only to request and calculate nearby aircraft positions. It does not intentionally store location history.
-
-## Planned Improvements
-
-- Watch buttons to cycle through aircraft
-- Dedicated aircraft detail screen
-- Ground speed display
-- Track or heading display
-- Registration and aircraft type display
-- Improved target label placement
-- Configurable refresh interval
-- Better battery management
-- Physical Pebble Round 2 testing
-- Optional manual location
-- Configurable maximum aircraft count
-- Save the selected range between launches
-
-## Development Workflow
-
-```bash
-pebble clean
-pebble build
-pebble install --emulator gabbro
-```
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
-
-## Author
+# Author
 
 **Jason Marquette**
 
-GitHub: `jasonmarquette`
+GitHub: https://github.com/jasonmarquette
