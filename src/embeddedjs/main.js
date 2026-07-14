@@ -23,44 +23,49 @@ const DEFAULT_RANGE_INDEX = 1;
 
 let radarRangeIndex = DEFAULT_RANGE_INDEX;
 let radarRangeNm = RADAR_RANGES_NM[radarRangeIndex];
-const DEMO_MODE = false;
+const DEMO_MODE = true;
 
 let aircraft = DEMO_MODE
   ? [
       {
-        callsign: "PIPISTRL",
-        distanceNm: 8.4,
-        bearing: 42,
-        track: 120,
-        altitude: 1385,
+        callsign: "UAL2217",
+        distanceNm: 3.5,
+        bearing: 95,
+        track: 185,
+        altitude: 9075,
+        speedKts: 430,
       },
       {
-        callsign: "ERJ-190",
-        distanceNm: 5.6,
-        bearing: 328,
-        track: 95,
-        altitude: 3925,
+        callsign: "DAL1435",
+        distanceNm: 7.6,
+        bearing: 20,
+        track: 110,
+        altitude: 31800,
+        speedKts: 445,
       },
       {
-        callsign: "PA-28R",
-        distanceNm: 7.8,
-        bearing: 262,
-        track: 45,
-        altitude: 2000,
+        callsign: "N527TX",
+        distanceNm: 6.5,
+        bearing: 225,
+        track: 315,
+        altitude: 2500,
+        speedKts: 115,
       },
       {
-        callsign: "737 MAX",
-        distanceNm: 4.4,
-        bearing: 155,
-        track: 80,
-        altitude: 29450,
+        callsign: "SWA812",
+        distanceNm: 8.2,
+        bearing: 145,
+        track: 235,
+        altitude: 11800,
+        speedKts: 390,
       },
       {
         callsign: "C172",
-        distanceNm: 9.2,
-        bearing: 198,
-        track: 15,
-        altitude: 3500,
+        distanceNm: 5.5,
+        bearing: 310,
+        track: 40,
+        altitude: 1800,
+        speedKts: 95,
       },
     ]
   : [];
@@ -72,6 +77,38 @@ let rangeSendPending = false;
 
 function degreesToRadians(degrees) {
   return (degrees * Math.PI) / 180;
+}
+
+function radiansToDegrees(radians) {
+  return (radians * 180) / Math.PI;
+}
+
+function normalizeBearing(degrees) {
+  return (degrees + 360) % 360;
+}
+
+function moveDemoAircraft(elapsedMs) {
+  if (!DEMO_MODE) {
+    return;
+  }
+
+  const rotationSpeed = 8;
+
+  aircraft.forEach(function (item) {
+    item.bearing = normalizeBearing(
+      item.bearing + rotationSpeed * (elapsedMs / 1000),
+    );
+
+    item.track = normalizeBearing(item.bearing + 90);
+
+    item.distanceNm +=
+      Math.sin(degreesToRadians(item.bearing * 2)) * 0.015;
+
+    item.distanceNm = Math.max(
+      2.8,
+      Math.min(item.distanceNm, 8.8),
+    );
+  });
 }
 
 function polarToScreen(centerX, centerY, distanceNm, bearing, radarRadius) {
@@ -185,10 +222,6 @@ function drawAircraftMarker(
     1,
   );
 
-  if (!showLabel) {
-    return;
-  }
-
   const callsign =
     item.callsign && item.callsign.length > 0
       ? item.callsign.slice(0, 8)
@@ -199,28 +232,31 @@ function drawAircraftMarker(
     "NM " +
     (item.altitude > 0 ? item.altitude + "FT" : "ALT--");
 
-  const callsignWidth = render.getTextWidth(callsign, SMALL_FONT);
-  const detailWidth = render.getTextWidth(detailText, SMALL_FONT);
+  const callsignWidth = render.getTextWidth(callsign, LABEL_FONT);
+  const detailWidth = showLabel
+    ? render.getTextWidth(detailText, SMALL_FONT)
+    : 0;
   const labelWidth = Math.max(callsignWidth, detailWidth);
 
   let labelX;
   let labelY;
 
-  // Put labels away from the center of the radar.
   if (point.x >= centerX) {
-    labelX = point.x + 6;
+    labelX = point.x + 8;
   } else {
-    labelX = point.x - labelWidth - 6;
+    labelX = point.x - labelWidth - 8;
   }
 
   if (point.y >= centerY) {
-    labelY = point.y + 5;
+    labelY = point.y + 7;
   } else {
-    labelY = point.y - 27;
+    labelY = point.y - (showLabel ? 29 : 16);
   }
 
-  // Keep labels inside the round display.
-  labelY = Math.max(18, Math.min(labelY, render.height - 55));
+  labelY = Math.max(
+    18,
+    Math.min(labelY, render.height - (showLabel ? 55 : 38)),
+  );
 
   const verticalOffset = Math.abs(labelY - centerY);
   const curvedMargin = Math.round(14 + verticalOffset * 0.22);
@@ -232,7 +268,15 @@ function drawAircraftMarker(
 
   render.drawText(callsign, LABEL_FONT, WHITE, labelX, labelY);
 
-  render.drawText(detailText, SMALL_FONT, TARGET_TEXT, labelX, labelY + 15);
+  if (showLabel) {
+    render.drawText(
+      detailText,
+      SMALL_FONT,
+      TARGET_TEXT,
+      labelX,
+      labelY + 15,
+    );
+  }
 }
 
 function parseAircraft(text) {
@@ -281,7 +325,12 @@ function drawRadar() {
   const centerY = Math.round(render.height / 2);
   const radarRadius = 110;
   const visible = visibleAircraft();
-  const selectedAircraft = visible.length > 0 ? visible[0] : null;
+  const selectedAircraft =
+  visible.length > 0
+    ? visible.reduce(function (closest, item) {
+        return item.distanceNm < closest.distanceNm ? item : closest;
+      })
+    : null;
 
   render.begin();
   render.fillRectangle(BG, 0, 0, render.width, render.height);
@@ -321,13 +370,15 @@ function drawRadar() {
   render.drawText(countText, SMALL_FONT, TARGET_TEXT, 8, 6);
 
   for (let i = visible.length - 1; i >= 0; i--) {
+    const isSelected = visible[i] === selectedAircraft;
+
     drawAircraftMarker(
       visible[i],
       centerX,
       centerY,
       radarRadius,
-      i === 0,
-      true,
+      isSelected,
+      isSelected,
     );
   }
 
@@ -492,11 +543,15 @@ function startSweepAnimation() {
     clearInterval(sweepTimer);
   }
 
+  const animationIntervalMs = 80;
+
   sweepTimer = setInterval(function () {
     sweepAngle = (sweepAngle + 4) % 360;
+    moveDemoAircraft(animationIntervalMs);
     drawRadar();
-  }, 80);
+  }, animationIntervalMs);
 }
+
 
 drawRadar();
 startSweepAnimation();
