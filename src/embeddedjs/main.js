@@ -23,7 +23,7 @@ const DEFAULT_RANGE_INDEX = 1;
 
 let radarRangeIndex = DEFAULT_RANGE_INDEX;
 let radarRangeNm = RADAR_RANGES_NM[radarRangeIndex];
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 let aircraft = DEMO_MODE
   ? [
@@ -77,10 +77,6 @@ let rangeSendPending = false;
 
 function degreesToRadians(degrees) {
   return (degrees * Math.PI) / 180;
-}
-
-function radiansToDegrees(radians) {
-  return (radians * 180) / Math.PI;
 }
 
 function normalizeBearing(degrees) {
@@ -326,11 +322,11 @@ function drawRadar() {
   const radarRadius = 110;
   const visible = visibleAircraft();
   const selectedAircraft =
-  visible.length > 0
-    ? visible.reduce(function (closest, item) {
-        return item.distanceNm < closest.distanceNm ? item : closest;
-      })
-    : null;
+    visible.length > 0
+      ? visible.reduce(function (closest, item) {
+          return item.distanceNm < closest.distanceNm ? item : closest;
+        })
+      : null;
 
   render.begin();
   render.fillRectangle(BG, 0, 0, render.width, render.height);
