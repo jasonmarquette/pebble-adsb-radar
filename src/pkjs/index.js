@@ -194,9 +194,18 @@ function updateRadar() {
   navigator.geolocation.getCurrentPosition(
     function(position) {
       const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      console.log("Location: " + latitude + ", " + longitude);
-      sendStatus("LOADING ADS-B");
+const longitude = position.coords.longitude;
+
+sendStatus(
+  latitude.toFixed(4) + "," + longitude.toFixed(4)
+);
+
+setTimeout(function() {
+  sendStatus("LOADING ADS-B");
+  fetchAircraft(latitude, longitude);
+}, 5000);
+
+return;
       fetchAircraft(latitude, longitude);
     },
     function(error) {
