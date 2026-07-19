@@ -9,16 +9,20 @@ A live ADS-B aircraft radar application for **Pebble Round 2** and
 **Pebble Time 2** that uses your connected phone's GPS and the ADS-B.fi
 API to display nearby aircraft on a smooth animated radar.
 
-## What's New in v1.1.0
+## ADS-B Radar v1.1.1
 
--   Restored live ADS-B mode as the default
--   Adjustable radar ranges (5, 10, 20, 40 NM)
--   Automatic highlighting of the closest aircraft
--   Callsigns shown for every visible aircraft
--   Improved aircraft-shaped directional markers
--   Improved label placement for round displays
--   More reliable phone/watch messaging
--   Updated documentation
+### Fixed
+
+- Added touchscreen tap-to-wake support for Pebble Time 2 and Pebble Round 2.
+- Improved stability during automatic ADS-B refreshes.
+- Reduced GPS and ADS-B polling from every 7.2 seconds to every 60 seconds.
+- Removed an unnecessary five-second delay before loading traffic.
+- Fixed an Alloy module packaging issue that could cause a blank screen.
+
+### Tested
+
+- Tap-to-wake confirmed on the Emery emulator.
+- Multiple automatic refresh cycles completed without crashing.
 
 ## Features
 
