@@ -1,7 +1,7 @@
 const DEFAULT_RADAR_RANGE_NM = 10;
 const ALLOWED_RADAR_RANGES_NM = [5, 10, 20, 40];
 const MAX_AIRCRAFT = 8;
-const REFRESH_MS = 7200;
+const REFRESH_MS = 60 * 1000;
 
 let radarRangeNm = DEFAULT_RADAR_RANGE_NM;
 let refreshTimer = null;
@@ -194,18 +194,10 @@ function updateRadar() {
   navigator.geolocation.getCurrentPosition(
     function(position) {
       const latitude = position.coords.latitude;
-const longitude = position.coords.longitude;
+      const longitude = position.coords.longitude;
 
-sendStatus(
-  latitude.toFixed(4) + "," + longitude.toFixed(4)
-);
-
-setTimeout(function() {
-  sendStatus("LOADING ADS-B");
-  fetchAircraft(latitude, longitude);
-}, 5000);
-
-return;
+      console.log("Location: " + latitude + ", " + longitude);
+      sendStatus("LOADING ADS-B");
       fetchAircraft(latitude, longitude);
     },
     function(error) {
